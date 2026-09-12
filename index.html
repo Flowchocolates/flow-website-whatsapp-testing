@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+   
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flow Chocolates</title>
+<link rel="stylesheet" href="style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1c1006;
+    --cream:#fff8ec;
+    --pistachio:#a3d940;
+    --pistachio-dk:#4d7a17;
+    --pink:#ff3e7f;
+    --pink-dk:#c41257;
+    --butter:#ffd23f;
+    --cacao:#3d2416;
+    --font-display:'Unbounded', sans-serif;
+    --font-body:'Plus Jakarta Sans', sans-serif;
+    --max-w:1240px;
+    --shadow:5px 5px 0 var(--ink);
+    --shadow-sm:3px 3px 0 var(--ink);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;font-family:var(--font-body);color:var(--ink);background:var(--cream);-webkit-font-smoothing:antialiased;}
+  img{max-width:100%;display:block;}
+  a{color:inherit;text-decoration:none;}
+  ul{list-style:none;margin:0;padding:0;}
+  h1,h2,h3{font-family:var(--font-display);margin:0;line-height:1.08;}
+  p{margin:0;}
+  .wrap{max-width:var(--max-w);margin:0 auto;padding:0 24px;}
+  .eyebrow{font-size:.74rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;}
+  mark{background:var(--butter);color:var(--ink);padding:2px 10px;border-radius:6px;display:inline-block;transform:rotate(-2deg);font-style:normal;}
+  :focus-visible{outline:3px solid var(--pink);outline-offset:3px;}
+
+  /* ---------- brutalist building blocks ---------- */
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;font-family:var(--font-body);
+    font-weight:800;font-size:.9rem;padding:13px 22px;border-radius:12px;
+    border:3px solid var(--ink);cursor:pointer;background:var(--cream);color:var(--ink);
+    box-shadow:var(--shadow);transition:transform .12s, box-shadow .12s;
+  }
+  .btn:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--ink);}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink);}
+  .btn-pink{background:var(--pink);color:#fff;}
+  .btn-pistachio{background:var(--pistachio);}
+  .btn-ink{background:var(--ink);color:var(--cream);}
+
+  /* ---------- zigzag section divider (the "snap") ---------- */
+  .snap{position:absolute;left:0;right:0;bottom:-1px;height:34px;line-height:0;z-index:3;pointer-events:none;}
+  .snap svg{width:100%;height:100%;display:block;}
+  .snap.flip{transform:scaleY(-1);top:-1px;bottom:auto;}
+
+  /* ---------- header ---------- */
+  header{position:sticky;top:0;z-index:50;background:var(--cream);border-bottom:3px solid var(--ink);}
+  .nav-row{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;max-width:var(--max-w);margin:0 auto;gap:16px;}
+  .logo{font-family:var(--font-display);font-size:1.3rem;font-weight:800;color:var(--ink);display:flex;align-items:center;gap:6px;}
+  .logo .dot{width:10px;height:10px;background:var(--pistachio);border:2px solid var(--ink);border-radius:50%;display:inline-block;}
+  nav.primary{display:flex;align-items:center;}
+  nav.primary > ul{display:flex;align-items:center;gap:4px;}
+  nav.primary a, nav.primary summary{color:var(--ink);font-weight:700;font-size:.88rem;padding:9px 14px;border-radius:999px;display:flex;align-items:center;gap:6px;cursor:pointer;list-style:none;}
+  nav.primary summary::-webkit-details-marker{display:none;}
+  nav.primary a:hover, nav.primary summary:hover{background:var(--butter);}
+  .chev{width:8px;height:8px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg);margin-top:-3px;transition:transform .2s;}
+  details[open] .chev{transform:rotate(-135deg);margin-top:3px;}
+  details{position:relative;}
+  .dropdown-panel{list-style:none;margin:0;padding:10px;background:var(--cream);border:3px solid var(--ink);border-radius:14px;box-shadow:var(--shadow);min-width:230px;}
+  @media(min-width:861px){.dropdown-panel{position:absolute;top:calc(100% + 10px);left:0;}}
+  .dropdown-panel li a{display:block;color:var(--ink);padding:9px 12px;border-radius:8px;font-weight:700;font-size:.86rem;}
+  .dropdown-panel li a:hover{background:var(--pistachio);}
+  .soon{display:inline-block;font-size:.6rem;font-weight:800;letter-spacing:.05em;color:#fff;background:var(--pink);border-radius:999px;padding:1px 7px;margin-left:6px;vertical-align:middle;}
+  .head-right{display:flex;align-items:center;gap:10px;}
+  .social-mini{display:flex;gap:6px;}
+  .social-mini a{width:32px;height:32px;border-radius:50%;border:2.5px solid var(--ink);display:flex;align-items:center;justify-content:center;background:var(--cream);}
+  .social-mini a:hover{background:var(--butter);}
+  .social-mini svg{width:14px;height:14px;}
+  #navToggle{display:none;}
+  .burger{display:none;}
+  @media(max-width:860px){
+    nav.primary{position:fixed;inset:63px 0 0 0;background:var(--cream);flex-direction:column;align-items:stretch;padding:18px;transform:translateX(100%);transition:transform .3s ease;overflow-y:auto;border-top:3px solid var(--ink);}
+    nav.primary > ul{flex-direction:column;align-items:stretch;width:100%;}
+    #navToggle:checked ~ nav.primary{transform:translateX(0);}
+    .burger{display:flex;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:8px;}
+    .burger span{width:22px;height:2.5px;background:var(--ink);display:block;}
+    .head-right .btn{display:none;}
+  }
+
+  /* ---------- marquee ---------- */
+  .marquee{background:var(--ink);color:var(--cream);overflow:hidden;border-bottom:3px solid var(--ink);}
+  .marquee-track{display:flex;width:max-content;animation:scrollx 26s linear infinite;padding:10px 0;}
+  .marquee span{font-family:var(--font-display);font-size:.78rem;font-weight:600;letter-spacing:.03em;padding:0 22px;white-space:nowrap;}
+  .marquee span.hi{color:var(--pistachio);}
+  @keyframes scrollx{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+  @media(prefers-reduced-motion:reduce){.marquee-track{animation:none;}}
+
+  /* ---------- hero ---------- */
+.hero{position:relative;background:var(--cream);padding:64px 0 0;overflow:hidden;}
+.hero-inner{max-width:1160px;margin:0 auto;padding:0 24px;display:grid;grid-template-columns:.9fr 1.1fr;gap:44px;align-items:center;text-align:left;}
+.hero h1{font-size:clamp(2rem,5vw + 0.5rem,3.6rem);font-weight:800;letter-spacing:-.01em;}
+.hero p.lead{color:var(--cacao);font-size:1.05rem;max-width:480px;margin:22px 0 0;line-height:1.55;font-weight:500;}
+.hero-ctas{display:flex;gap:14px;justify-content:flex-start;margin:30px 0 0;flex-wrap:wrap;}
+.hero-photo{position:relative;aspect-ratio:4/5;border:4px solid var(--ink);border-radius:20px;box-shadow:9px 9px 0 var(--ink);transform:rotate(-3deg);transition:transform .2s;overflow:hidden;background:var(--cream);}
+.hero-photo:hover{transform:rotate(0deg) translateY(-4px);}
+.hero-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1s ease;}
+.hero-photo img.active{opacity:1;}
+@media(max-width:820px){
+  .hero-inner{grid-template-columns:1fr;text-align:center;gap:32px;}
+  .hero p.lead{margin-left:auto;margin-right:auto;}
+  .hero-ctas{justify-content:center;}
+}
+
+  .sticker-row{display:flex;justify-content:center;gap:18px;flex-wrap:wrap;margin:56px auto 60px;max-width:760px;padding:0 24px;}
+  .sticker{border:3px solid var(--ink);border-radius:999px;padding:14px 22px;box-shadow:var(--shadow);font-family:var(--font-display);font-weight:700;font-size:.95rem;text-align:center;}
+  .sticker small{display:block;font-family:var(--font-body);font-weight:700;font-size:.62rem;letter-spacing:.04em;text-transform:uppercase;margin-top:2px;}
+  .sticker:nth-child(1){background:var(--pink);color:#fff;transform:rotate(-6deg);}
+  .sticker:nth-child(2){background:var(--pistachio);transform:rotate(3deg);}
+  .sticker:nth-child(3){background:var(--butter);transform:rotate(-3deg);}
+  .sticker:hover{transform:rotate(0deg) translateY(-3px);}
+
+  /* ---------- review wall ---------- */
+  .section-reviews{position:relative;background:var(--pink);padding:70px 0 100px;}
+  .section-head{max-width:600px;margin:0 auto 42px;text-align:center;}
+  .section-head.on-pink h2,.section-head.on-pink .eyebrow{color:#fff;}
+  .section-head.on-pink p{color:rgba(255,255,255,.85);}
+  .section-head h2{font-size:clamp(1.7rem,3.4vw,2.4rem);font-weight:800;margin-top:8px;}
+  .section-head p{margin-top:12px;font-size:.98rem;line-height:1.6;font-weight:500;}
+
+  .review-wall-outer{position:relative;max-width:1100px;margin:0 auto;padding:0 70px;}
+  .review-wall{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;}
+  @media(max-width:900px){.review-wall{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:600px){.review-wall{grid-template-columns:1fr;max-width:380px;margin:0 auto;}}
+
+  .review-slideshow{position:relative;background:#fff;border:3px solid var(--ink);border-radius:16px;box-shadow:var(--shadow-sm);overflow:hidden;transform:rotate(var(--rot,0deg));transition:transform .2s, box-shadow .2s;}
+  .review-slideshow:hover{transform:rotate(0deg) translateY(-4px);box-shadow:var(--shadow);}
+  .review-slideshow:nth-child(3n+1){--rot:-1deg;}
+  .review-slideshow:nth-child(3n+2){--rot:.8deg;}
+  .review-slideshow:nth-child(3n+3){--rot:-.6deg;}
+  .review-slides{position:relative;width:100%;aspect-ratio:4/3;background:#f6f1e7;}
+  .review-slide{position:absolute;inset:0;opacity:0;transition:opacity .6s ease;display:flex;align-items:center;justify-content:center;padding:8px;}
+  .review-slide.active{opacity:1;z-index:1;}
+  .review-slide img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;display:block;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,.12);}
+  .review-tag{position:absolute;top:12px;right:12px;background:var(--pistachio);border:2.5px solid var(--ink);border-radius:999px;font-size:.66rem;font-weight:800;padding:4px 11px;transform:rotate(4deg);z-index:3;}
+  .review-arrow-global{position:absolute;top:50%;transform:translateY(-50%);width:52px;height:52px;border-radius:50%;border:3px solid var(--ink);background:#fff;color:var(--ink);font-size:1.6rem;font-weight:800;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:5;box-shadow:var(--shadow-sm);transition:transform .15s ease, background .15s ease;line-height:1;padding:0;}
+  .review-arrow-global:hover{background:var(--butter);transform:translateY(-50%) scale(1.08);}
+  .review-arrow-global.prev{left:0;}
+  .review-arrow-global.next{right:0;}
+  @media(max-width:700px){.review-wall-outer{padding:0 24px;}.review-arrow-global{position:static;transform:none;margin:0 auto;}}
+  .review-dots{position:absolute;bottom:10px;left:0;right:0;display:flex;justify-content:center;gap:7px;z-index:4;}
+  .review-dots .dot{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.8);border:2px solid var(--ink);cursor:pointer;padding:0;transition:background .15s ease, transform .15s ease;}
+  .review-dots .dot.active{background:var(--pink);transform:scale(1.15);}
+  .review-slide img{cursor:zoom-in;}
+  .lightbox-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;z-index:999;padding:30px;}
+  .lightbox-overlay.open{display:flex;}
+  .lightbox-overlay img{max-width:100%;max-height:90vh;width:auto;height:auto;border-radius:10px;box-shadow:0 10px 40px rgba(0,0,0,.5);}
+  .lightbox-close{position:absolute;top:20px;right:24px;width:44px;height:44px;border-radius:50%;border:2.5px solid #fff;background:rgba(255,255,255,.1);color:#fff;font-size:1.6rem;display:flex;align-items:center;justify-content:center;cursor:pointer;line-height:1;}
+  .lightbox-close:hover{background:#fff;color:#000;}
+
+  .review-note{text-align:center;color:#fff;font-weight:700;font-size:.85rem;margin-top:36px;background:rgba(0,0,0,.18);display:inline-block;padding:10px 18px;border-radius:999px;}
+  .review-note-wrap{text-align:center;}
+
+  /* ---------- gift section ---------- */
+  .section-gift{position:relative;background:var(--cream);padding:90px 0 100px;}
+  .box-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:8px;}
+  @media(max-width:760px){.box-grid{grid-template-columns:1fr;}}
+  .box-card{background:#fff;border:3px solid var(--ink);border-radius:20px;padding:28px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:14px;}
+  .box-card .tag{align-self:flex-start;background:var(--butter);border:2.5px solid var(--ink);color:var(--ink);font-size:.68rem;font-weight:800;letter-spacing:.03em;padding:4px 12px;border-radius:999px;}
+  .box-card h3{font-size:1.35rem;font-weight:800;}
+  .box-card p{color:var(--cacao);font-size:.92rem;line-height:1.55;font-weight:500;}
+  .box-price{font-family:var(--font-display);font-size:1.25rem;color:var(--pink-dk);font-weight:700;}
+  .box-price small{font-family:var(--font-body);color:var(--cacao);font-size:.68rem;font-weight:700;display:block;}
+  .box-card .btn{margin-top:6px;align-self:flex-start;}
+
+  .gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:56px;}
+  @media(max-width:760px){.gallery{grid-template-columns:1fr;}}
+  .gal-item{background:#fff;border:3px solid var(--ink);border-radius:16px;overflow:hidden;box-shadow:var(--shadow-sm);}
+  .gal-item .ph{aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;padding:18px;background:var(--cream);border-bottom:3px solid var(--ink);}
+  .gal-item .ph img{width:100%;height:100%;object-fit:contain;}
+  .gal-item .ph.ph-fill{padding:0;}
+  .gal-item .ph.ph-fill img{object-fit:cover;object-position:center;}
+  .gal-cap{padding:14px 16px 18px;}
+  .gal-cap .name{font-weight:800;font-size:.9rem;}
+  .gal-cap .desc{font-size:.78rem;color:var(--cacao);margin-top:3px;font-weight:500;}
+
+  /* ---------- bar break section ---------- */
+  .section-bar{position:relative;background:var(--pistachio);padding-top:90px;}
+  .bar-head{max-width:560px;margin:0 auto;text-align:center;padding:0 24px;}
+  .bar-head .eyebrow{color:var(--pink-dk);}
+  .bar-head h2{font-size:clamp(1.7rem,3.4vw,2.4rem);font-weight:800;margin-top:8px;}
+  .bar-head p{color:var(--cacao);margin-top:12px;font-size:.98rem;line-height:1.6;font-weight:600;}
+
+  .scroll-stage{height:280vh;position:relative;}
+  .scroll-sticky{position:sticky;top:0;height:100vh;overflow:hidden;}
+  .bar-caption{position:absolute;top:14%;left:0;right:0;text-align:center;pointer-events:none;padding:0 24px;}
+  .bar-caption .inner{display:inline-block;background:rgba(255,251,236,.9);backdrop-filter:blur(6px);border:3px solid var(--ink);border-radius:16px;padding:14px 26px;box-shadow:var(--shadow-sm);}
+  .bar-caption .eyebrow{color:var(--pink-dk);display:block;}
+  .bar-caption h3{font-size:clamp(1.3rem,3vw,1.9rem);margin-top:10px;font-weight:800;max-width:520px;margin-left:auto;margin-right:auto;}
+  .bar-stage3d{position:absolute;inset:0;}
+  .bar-stage3d img{width:100%;height:100%;object-fit:cover;object-position:center -90%;display:block;}
+
+  .bar-selector{position:relative;max-width:var(--max-w);margin:0 auto;padding:20px 24px 100px;}
+  .tabbar{display:flex;justify-content:center;gap:10px;margin-bottom:26px;}
+  .tab-btn{background:var(--cream);border:3px solid var(--ink);color:var(--ink);font-weight:800;font-size:.86rem;padding:10px 22px;border-radius:999px;cursor:pointer;box-shadow:var(--shadow-sm);}
+  .tab-btn.active{background:var(--pink);color:#fff;}
+
+  .flavor-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,150px));justify-content:center;gap:14px;max-width:700px;margin:0 auto 34px;padding:0 24px;}
+  .flavor-card{display:none;background:#fff;border:2.5px solid var(--ink);border-radius:14px;overflow:hidden;cursor:pointer;text-align:center;transition:transform .12s, box-shadow .12s;}
+  .flavor-card.show{display:block;}
+  .flavor-card:hover{transform:translateY(-3px);}
+  .flavor-card .thumb{aspect-ratio:1/1;background:var(--cream);display:flex;align-items:center;justify-content:center;padding:10px;border-bottom:2.5px solid var(--ink);}
+  .flavor-card .thumb img{width:100%;height:100%;object-fit:contain;}
+  .flavor-card .label{padding:8px 6px;font-size:.72rem;font-weight:800;line-height:1.25;}
+  .flavor-card.active{box-shadow:4px 4px 0 var(--ink);background:var(--butter);}
+
+  .preview-card{max-width:640px;margin:0 auto;background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);padding:26px 28px;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;}
+  .preview-img{width:180px;height:180px;flex-shrink:0;border:3px solid var(--ink);border-radius:16px;overflow:hidden;background:var(--cream);}
+  .preview-img img{width:100%;height:100%;object-fit:contain;}
+  .preview-left h4{font-size:1.25rem;font-weight:800;}
+  .preview-left .cocoa{color:var(--pink-dk);font-size:.72rem;font-weight:800;letter-spacing:.04em;margin-top:4px;display:block;}
+  .preview-left p{color:var(--cacao);font-size:.86rem;margin-top:8px;max-width:340px;line-height:1.5;font-weight:500;}
+  .preview-right{display:flex;align-items:center;justify-content:flex-end;gap:18px;width:100%;text-align:left;}
+  .preview-right .price{font-family:var(--font-display);font-size:1.3rem;font-weight:700;}
+  .preview-right small{display:block;color:var(--cacao);font-size:.66rem;margin-bottom:4px;font-weight:700;}
+  .video-note{max-width:640px;margin:26px auto 0;text-align:center;font-size:.8rem;color:var(--cacao);font-weight:600;}
+
+  /* ---------- footer ---------- */
+  footer{position:relative;background:var(--ink);color:var(--cream);padding:80px 0 30px;}
+  .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1.2fr;gap:40px;padding-bottom:50px;border-bottom:2px solid rgba(255,248,236,.15);}
+  @media(max-width:820px){.foot-grid{grid-template-columns:1fr 1fr;}}
+  @media(max-width:520px){.foot-grid{grid-template-columns:1fr;}}
+  .foot-brand .logo{color:var(--cream);margin-bottom:14px;}
+  .foot-brand p{color:rgba(255,248,236,.65);font-size:.88rem;line-height:1.6;max-width:280px;font-weight:500;}
+  .foot-col h5{font-family:var(--font-display);font-size:.72rem;letter-spacing:.05em;text-transform:uppercase;color:var(--pistachio);font-weight:700;margin-bottom:16px;}
+  .foot-col ul li{margin-bottom:10px;}
+  .foot-col ul a{color:rgba(255,248,236,.8);font-size:.9rem;font-weight:600;}
+  .foot-col ul a:hover{color:var(--butter);}
+  .shop-badges{display:flex;flex-direction:column;gap:10px;}
+  .shop-badge{display:flex;align-items:center;gap:10px;background:rgba(255,248,236,.08);border:2px solid rgba(255,248,236,.25);padding:10px 14px;border-radius:10px;font-weight:700;font-size:.85rem;}
+  .shop-badge:hover{border-color:var(--butter);color:var(--butter);}
+  .shop-badge svg{width:16px;height:16px;flex-shrink:0;}
+  .foot-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:26px;flex-wrap:wrap;gap:12px;}
+  .foot-bottom p{color:rgba(255,248,236,.45);font-size:.78rem;}
+  .foot-social{display:flex;gap:8px;}
+  .foot-social a{width:34px;height:34px;border-radius:50%;background:rgba(255,248,236,.08);border:2px solid rgba(255,248,236,.25);display:flex;align-items:center;justify-content:center;}
+  .foot-social a:hover{background:var(--pistachio);border-color:var(--pistachio);color:var(--ink);}
+  .foot-social svg{width:15px;height:15px;}
+
+  @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto;}}
+</style>
+</head>
+<body>
+
+  <div id="orderStatusBanner" class="order-banner" style="display:none;">
+    <span id="orderStatusText"></span>
+    <button onclick="document.getElementById('orderStatusBanner').style.display='none'" aria-label="Tutup">✕</button>
+  </div>
+
+<header>
+  <div class="nav-row">
+    <a href="#top" class="logo"><span class="dot"></span>Flow Chocolates</a>
+    <input type="checkbox" id="navToggle">
+    <nav class="primary">
+      <ul>
+        <li><a href="#top">Beranda</a></li>
+        <li><a href="#bar-pilihan">Cokelat Batang / Chocolate Bar</a></li>
+        <li>
+          <details>
+            <summary>Hadiah <span class="chev"></span></summary>
+            <ul class="dropdown-panel">
+              <li><a href="#">Chocolate Gift Box <span class="soon">segera</span></a></li>
+              <li><a href="#">Corporate Gift <span class="soon">segera</span></a></li>
+              <li><a href="#">Wedding Gift Set <span class="soon">segera</span></a></li>
+              <li><a href="#">Aqiqah Gift <span class="soon">segera</span></a></li>
+              <li><a href="#">Ramadhan &amp; Eid Gift <span class="soon">segera</span></a></li>
+            </ul>
+          </details>
+        </li>
+        <li><a href="#hadiah">Gift Box</a></li>
+        <li><a href="assets/katalog/flow-chocolates-katalog-2026.pdf" download="Flow-Chocolates-Katalog.pdf">Katalog</a></li>
+        <li><a href="#footer">Kontak</a></li>
+      </ul>
+    </nav>
+    <div class="head-right">
+      <div class="social-mini">
+        <a href="https://www.instagram.com/flow.chocolates/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" title="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1"/></svg></a>
+        <a href="https://www.tiktok.com/@flow.chocolates" target="_blank" rel="noopener noreferrer" aria-label="TikTok" title="TikTok"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 3c.3 2.1 1.8 3.6 4 3.9v2.6c-1.5 0-2.9-.4-4-1.2v6.1a5.6 5.6 0 1 1-5.6-5.6c.3 0 .6 0 .9.1v2.7a2.9 2.9 0 1 0 2 2.8V3h2.7z"/></svg></a>
+        <a href="#" aria-label="Facebook" title="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21v-7.6h2.6l.4-3H13.5V8.4c0-.9.2-1.5 1.5-1.5h1.6V4.2C16.3 4.1 15.3 4 14.1 4c-2.4 0-4.1 1.5-4.1 4.1v2.3H7.4v3H10V21h3.5z"/></svg></a>
+      </div>
+      <a href="#footer" class="btn btn-pink">Belanja</a>
+      <button class="btn account-btn" id="authBtn" aria-label="Masuk atau Daftar">👤 Masuk</button>
+      <button class="btn cart-btn" onclick="toggleCart(true)" aria-label="Buka keranjang">🛒 <span id="cartCount">0</span></button>
+      <label for="navToggle" class="burger" aria-label="Menu"><span></span><span></span><span></span></label>
+    </div>
+  </div>
+</header>
+
+<div class="marquee">
+  <div class="marquee-track">
+    <span>🍫 RATING <span class="hi">4.9/5</span></span><span><span class="hi">1000+</span> ULASAN BINTANG 5</span><span><span class="hi">3000+</span> BOX TERKIRIM</span><span>KIRIM SELURUH INDONESIA 📦</span>
+    <span>🍫 RATING <span class="hi">4.9/5</span></span><span><span class="hi">1000+</span> ULASAN BINTANG 5</span><span><span class="hi">3000+</span> BOX TERKIRIM</span><span>KIRIM SELURUH INDONESIA 📦</span>
+  </div>
+</div>
+
+<main id="top">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-text">
+        <span class="eyebrow" style="color:var(--pink-dk)">Your Favorite Chocolates</span>
+        <h1>Cokelat yang <mark>beneran</mark> enak, bukan cuma kata kita</h1>
+        <p class="lead">Cek sendiri di bawah! itu screenshot asli ulasan pembeli kita, bukan settingan!</p>
+        <div class="hero-ctas">
+          <a href="#hadiah" class="btn btn-pistachio">Lihat Gift Box 🎁</a>
+          <a href="#bar-pilihan" class="btn btn-ink">Pilih Bar Favorit 🍫</a>
+        </div>
+      </div>
+      <div class="hero-photo" id="heroSlideshow">
+        <img class="active" src="assets\chocolates\vibrant_style_12_pcs_pink_potrait.jpeg" alt="Flow Chocolates gift box">
+        <img src="assets\chocolates\vibrant_style_12_pcs_green.jpeg" alt="Flow Chocolates gift box">
+        <img src="assets\chocolates\vibrant_style_bar_2_potrait.jpeg" alt="Flow Chocolates Bar">
+        <img src="assets\chocolates\vibrant_style_bar_6_potrait.jpeg" alt="Flow Chocolates Bar">
+        <img src="assets\chocolates\vibrant_style_12_pcs_pink_2.jpeg" alt="Flow Chocolates Bar">
+      </div>
+    </div>
+    <div class="sticker-row">
+      <div class="sticker">4.9/5<small>Rating rata-rata</small></div>
+      <div class="sticker">1000+<small>Ulasan bintang 5</small></div>
+      <div class="sticker">3000+<small>Box terkirim</small></div>
+    </div>
+  </section>
+
+  <!-- ============ REVIEW WALL ============ -->
+  <section class="section-reviews">
+    <div class="section-head on-pink">
+      <span class="eyebrow">Bukti, bukan janji</span>
+      <h2>Kata mereka yang udah coba</h2>
+      <p>Screenshot ulasan asli dari pembeli Shopee kita, bukan testimoni karangan!</p>
+    </div>
+
+    <div class="review-wall-outer">
+      <button type="button" class="review-arrow-global prev" aria-label="Ulasan sebelumnya">‹</button>
+
+      <div class="review-wall">
+
+        <div class="review-slideshow">
+          <div class="review-slides">
+            <div class="review-slide active">
+              <div class="review-tag">✅ Asli</div>
+              <img src="assets/review_screenshot/1.png" alt="Screenshot ulasan Shopee">
+            </div>
+            <div class="review-slide">
+              <div class="review-tag">✅ Asli</div>
+              <img src="assets/review_screenshot/2.png" alt="Screenshot ulasan Shopee">
+            </div>
+            <div class="review-slide">
+              <div class="review-tag">✅ Asli</div>
+              <img src="assets/review_screenshot/3.png" alt="Screenshot ulasan Shopee">
+            </div>
+          </div>
+          <div class="review-dots">
+            <button type="button" class="dot active" aria-label="Slide 1"></button>
+            <button type="button" class="dot" aria-label="Slide 2"></button>
+            <button type="button" class="dot" aria-label="Slide 3"></button>
+          </div>
+        </div>
+
+        <div class="review-slideshow">
+          <div class="review-slides">
+            <div class="review-slide active">
+              <div class="review-tag">✅ Asli</div>
+              <img src="assets/review_screenshot/4.png" alt="Screenshot ulasan Shopee">
+            </div>
+            <div class="review-slide">
+              <div class="review-tag">✅ Asli</div>
+              <img src="assets/review_screenshot/5.png" alt="Screenshot ulasan Shopee">
+            </div>
+            <div class="review-slide">
+              <div class="review-tag">✅ Asli</div>
+              <img src="assets/review_screenshot/11.png" alt="Screenshot ulasan Shopee">
+            </div>
+          </div>
+          <div class="review-dots">
+            <button type="button" class="dot active" aria-label="Slide 1"></button>
+            <button type="button" class="dot" aria-label="Slide 2"></button>
+            <button type="button" class="dot" aria-label="Slide 3"></button>
+          </div>
+        </div>
+
+        <div class="review-slideshow">
+          <div class="review-slides">
+            <div class="review-slide active">
+              <div class="review-tag">✅ Asli</div>
+              <img src="assets/review_screenshot/7.png" alt="Screenshot ulasan Shopee">
+            </div>
+            <div class="review-slide">
+              <div class="review-tag">✅ Asli</div>
+              <img src="assets/review_screenshot/8.png" alt="Screenshot ulasan Shopee">
+            </div>
+            <div class="review-slide">
+              <div class="review-tag">✅ Asli</div>
+              <img src="assets/review_screenshot/9.png" alt="Screenshot ulasan Shopee">
+            </div>
+          </div>
+          <div class="review-dots">
+            <button type="button" class="dot active" aria-label="Slide 1"></button>
+            <button type="button" class="dot" aria-label="Slide 2"></button>
+            <button type="button" class="dot" aria-label="Slide 3"></button>
+          </div>
+        </div>
+
+      </div>
+
+      <button type="button" class="review-arrow-global next" aria-label="Ulasan berikutnya">›</button>
+    </div>
+    <div class="review-note-wrap"><span class="review-note">👆 Yang mau bisa order sekarang!</span></div>
+
+    <div class="snap" style="color:var(--cream)">
+      <svg viewBox="0 0 1200 34" preserveAspectRatio="none">
+        <path fill="currentColor" d="M0,0 L50,20 L100,2 L150,22 L200,0 L250,20 L300,2 L350,22 L400,0 L450,20 L500,2 L550,22 L600,0 L650,20 L700,2 L750,22 L800,0 L850,20 L900,2 L950,22 L1000,0 L1050,20 L1100,2 L1150,22 L1200,0 L1200,34 L0,34 Z"/>
+        <polyline fill="none" stroke="var(--ink)" stroke-width="4" stroke-linejoin="round" points="0,0 50,20 100,2 150,22 200,0 250,20 300,2 350,22 400,0 450,20 500,2 550,22 600,0 650,20 700,2 750,22 800,0 850,20 900,2 950,22 1000,0 1050,20 1100,2 1150,22 1200,0"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ============ GIFT BOX ============ -->
+  <section class="section-gift" id="hadiah">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow" style="color:var(--pink-dk)">Gift Box</span>
+        <h2>Satu kotak, banyak cerita</h2>
+        <p style="color:var(--cacao)">Setiap gift box disusun tangan dengan campuran coklat pilihan. Cocok buat hampers, hadiah korporat, atau self-reward.</p>
+      </div>
+
+<div class="box-grid">
+
+  <!-- 9 PCS -->
+  <div class="box-card">
+
+    <div class="box-image">
+      <img id="gift9-image"
+           src="assets/gift-box/9-pcs-cream-box-without-lid.jpeg"
+           alt="Gift Box Isi 9">
+    </div>
+
+    <span class="tag">Isi 9</span>
+
+    <h3>Gift Box Isi 9</h3>
+
+    <p>
+      Sembilan coklat pilihan dalam kotak yang estetik,
+      pas buat hadiah personal atau self-reward.
+    </p>
+
+    <div class="variation-title">Pilih warna box:</div>
+
+    <div class="variation-options">
+      <button type="button"
+              class="variation-btn color-cream active"
+              onclick="changeGift9('cream', this)">
+        Cream
+      </button>
+
+      <button type="button"
+              class="variation-btn color-gold"
+              onclick="changeGift9('gold', this)">
+        Gold
+      </button>
+
+      <button type="button"
+              class="variation-btn color-pink"
+              onclick="changeGift9('pink', this)">
+        Pink
+      </button>
+    </div>
+
+    <span class="box-price" id="gift9Price">Rp 50.000</span>
+
+    <button type="button" class="btn btn-pink" onclick="addGift9ToCart()">Tambah ke Keranjang</button>
+
+  </div>
+
+
+  <!-- 12 PCS -->
+  <div class="box-card">
+
+    <div class="box-image">
+      <img id="gift12-image"
+           src="assets/gift-box/12-pcs-pink-box-without-lid-milk-white.jpeg"
+           alt="Gift Box Isi 12">
+    </div>
+
+    <span class="tag">Isi 12</span>
+
+    <h3>Gift Box Isi 12</h3>
+
+    <p>
+      Dua belas cokelat premium dengan kombinasi coklat berbentuk cube,
+      favorit buat hadiah korporat &amp; hampers keluarga.
+    </p>
+
+    <div class="variation-title">Pilih warna box:</div>
+
+    <div class="variation-options">
+
+      <button type="button"
+              class="variation-btn color-pink active"
+              onclick="select12Color('pink', this)">
+        Pink
+      </button>
+
+      <button type="button"
+              class="variation-btn color-green"
+              onclick="select12Color('green', this)">
+        Hijau
+      </button>
+
+    </div>
+
+    <div class="variation-title">Pilih kombinasi cokelat:</div>
+
+    <div class="variation-options chocolate-options">
+
+      <button type="button"
+              class="variation-btn chocolate-dark-milk active"
+              onclick="select12Chocolate('dark-milk', this)">
+        Dark + Milk
+      </button>
+
+      <button type="button"
+              class="variation-btn chocolate-milk-white"
+              onclick="select12Chocolate('milk-white', this)">
+        <span class="text-milk-side">Milk</span> +
+        <span class="text-white-side">White</span>
+      </button>
+
+      <button type="button"
+              class="variation-btn chocolate-dark-white"
+              onclick="select12Chocolate('dark-white', this)">
+        Dark + <span class="text-white-side">White</span>
+      </button>
+
+    </div>
+
+    <span class="box-price" id="gift12Price">Rp 108.000 </span>
+
+    <button type="button" class="btn btn-pink" onclick="addGift12ToCart()">Tambah ke Keranjang</button>
+
+  </div>
+
+</div>
+
+
+<!-- CHOCOLATE GALLERY -->
+<div class="gallery">
+
+  <div class="gal-item">
+
+    <div class="ph">
+      <img src="assets/chocolates/white-heart.png"
+           alt="White chocolate heart shape dengan buah beri kering">
+    </div>
+
+    <div class="gal-cap">
+      <div class="name">White Heart Shape</div>
+      <div class="desc">
+        Cokelat putih dengan potongan buah beri kering dan almond
+      </div>
+    </div>
+
+  </div>
+
+
+    <div class="gal-item">
+
+  <div class="ph ph-fill">
+    <img src="assets/chocolates/white_cube_single.jpeg"
+         alt="Cokelat setengah lingkaran dengan cranberry, kismis, dan almond">
+  </div>
+
+  <div class="gal-cap">
+    <div class="name">White Chocolate Cube Fruit &amp; Nut</div>
+    <div class="desc">
+      Cokelat cube dengan cranberry, kismis, mede
+      &amp; almond utuh
+    </div>
+  </div>
+
+</div>
+
+  <div class="gal-item">
+
+    <div class="ph">
+      <img src="assets/chocolates/milk-dome.png"
+           alt="Cokelat berbentuk kotak dengan kismis, cranberry, almond, dan kenari">
+    </div>
+
+    <div class="gal-cap">
+      <div class="name">Milk Chocolate Dome Fruit &amp; Nut</div>
+      <div class="desc">
+        Berisi kismis, cranberry, &amp; almond panggang
+      </div>
+    </div>
+
+  </div>
+
+
+</div>
+
+    <div class="snap" style="color:var(--pistachio)">
+      <svg viewBox="0 0 1200 34" preserveAspectRatio="none">
+        <path fill="currentColor" d="M0,0 L50,20 L100,2 L150,22 L200,0 L250,20 L300,2 L350,22 L400,0 L450,20 L500,2 L550,22 L600,0 L650,20 L700,2 L750,22 L800,0 L850,20 L900,2 L950,22 L1000,0 L1050,20 L1100,2 L1150,22 L1200,0 L1200,34 L0,34 Z"/>
+        <polyline fill="none" stroke="var(--ink)" stroke-width="4" stroke-linejoin="round" points="0,0 50,20 100,2 150,22 200,0 250,20 300,2 350,22 400,0 450,20 500,2 550,22 600,0 650,20 700,2 750,22 800,0 850,20 900,2 950,22 1000,0 1050,20 1100,2 1150,22 1200,0"/>
+      </svg>
+    </div>
+  </section>
+<!-- ============ 5 Perline Gift ============ -->
+<section class="section-gift5" id="gift5-section">
+  <div class="box-card">
+    <div class="box-image">
+      <img id="gift5-image" src="assets/gift-box-5pcs/milk-cube-gold-5pcs.jpg" alt="Gift Box Isi 5">
+    </div>
+    <div class="gift5-right">
+      <div class="gift5-title-bar">
+        <span class="badge">Isi 5</span>
+        <h3>Gift Box Isi 5</h3>
+      </div>
+      <div class="gift5-content-box">
+        <p>Lima cokelat pilihan dalam kotak mungil yang manis, cocok untuk hadiah personal.</p>
+
+        <div class="variation-title">Pilih warna box:</div>
+        <div class="variation-options">
+          <button type="button" class="variation-btn color-gold active" onclick="select5Color('gold', this)">Gold</button>
+          <button type="button" class="variation-btn color-red" onclick="select5Color('red', this)">Red</button>
+          <button type="button" class="variation-btn color-pink" onclick="select5Color('pink', this)">Pink</button>
+        </div>
+
+        <div class="variation-title">Pilih bentuk:</div>
+        <div class="variation-options">
+          <button type="button" class="variation-btn variant-btn-plain active" onclick="select5Shape('cube', this)">Cube</button>
+          <button type="button" class="variation-btn variant-btn-plain" onclick="select5Shape('dome', this)">Dome</button>
+          <button type="button" class="variation-btn variant-btn-plain" onclick="select5Shape('heart', this)">Heart</button>
+        </div>
+
+        <div class="variation-title">Pilih cokelat:</div>
+        <div class="variation-options">
+          <button type="button" class="variation-btn variant-btn-plain active" onclick="select5Chocolate('milk', this)">Milk</button>
+          <button type="button" class="variation-btn variant-btn-plain" onclick="select5Chocolate('white', this)">White</button>
+        </div>
+
+        <span class="box-price" id="gift5Price">Rp 00.000</span>
+        <button type="button" class="btn btn-pink" onclick="addGift5ToCart()">Tambah ke Keranjang</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <!-- ============ BAR BREAK + SELECTOR ============ -->
+  <section class="section-bar" id="bar-section">
+    <div class="bar-head">
+      <span class="eyebrow">Bar Chocolate</span>
+      <h2>Lihat sendiri patahannya 🍫</h2>
+      <p>Scroll ke bawah dan perhatikan batangnya patah.</p>
+    </div>
+
+    <div class="scroll-stage" id="scrollStage">
+      <div class="scroll-sticky">
+        <div class="bar-caption">
+          <div class="inner">
+            <span class="eyebrow" id="capEyebrow">Geser untuk mematahkan</span>
+          </div>
+        </div>
+        <div class="bar-stage3d" id="barStage">
+          <img id="barFrame" src="assets/choco_break_frames/ezgif-frame-001.jpg" alt="Batang cokelat Flow Chocolates dipatahkan dengan tangan">
+        </div>
+      </div>
+    </div>
+
+    <div class="bar-selector" id="bar-pilihan">
+      <div class="tabbar">
+        <button class="tab-btn active" id="tabMilk" onclick="selectBarTab('milk')">Milk Chocolate</button>
+        <button class="tab-btn" id="tabDark" onclick="selectBarTab('dark')">Dark Chocolate</button>
+        <button class="tab-btn" id="tabWhite" onclick="selectBarTab('white')">White Chocolate</button>
+      </div>
+      <div class="flavor-grid" id="flavorGrid"></div>
+      <div class="preview-card">
+        <div class="preview-img"><img id="prevImg" src="assets\bar_chocolates\milk_bar_aprikot.png" alt=""></div>
+        <div class="preview-left">
+          <span class="cocoa" id="prevCocoa">MILK CHOCOLATE</span>
+          <h4 id="prevName">Pistachio</h4>
+          <span class="size-note" id="prevSize"></span>
+          <p id="prevDesc">Cokelat susu lembut dengan taburan pistachio panggang di setiap gigitan.</p>
+        </div>
+        <div class="preview-right">
+          <span class="price" id="prevPrice">Rp 32.500</span>
+          <button type="button" class="btn btn-pink" onclick="addToCart(currentFlavorSelection.id, currentFlavorSelection.name, currentFlavorSelection.price, 1)">Tambah ke Keranjang</button>
+        </div>
+      </div>
+      <p class="video-note">Order sekarang sebelum kehabisan!</p>
+    </div>
+
+    <div class="snap" style="color:var(--ink)">
+      <svg viewBox="0 0 1200 34" preserveAspectRatio="none">
+        <path fill="currentColor" d="M0,0 L50,20 L100,2 L150,22 L200,0 L250,20 L300,2 L350,22 L400,0 L450,20 L500,2 L550,22 L600,0 L650,20 L700,2 L750,22 L800,0 L850,20 L900,2 L950,22 L1000,0 L1050,20 L1100,2 L1150,22 L1200,0 L1200,34 L0,34 Z"/>
+      </svg>
+    </div>
+  </section>
+
+    <section class="section-catalog">
+  <div class="wrap catalog-inner">
+    <div class="catalog-text">
+      <span class="eyebrow">Untuk Corporate &amp; Bulk Order</span>
+      <h3>Butuh dalam jumlah besar?</h3>
+      <p>Download katalog lengkap kami, semua varian, dan info untuk kebutuhan corporate, hampers, atau acara.</p>
+    </div>
+    <a href="assets/katalog/flow-chocolates-katalog-2026.pdf" download="Flow-Chocolates-Katalog.pdf" class="btn btn-ink">📄 Download Katalog (PDF)</a>
+  </div>
+</section>
+
+<section class="section-stories">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow" style="color:var(--pink-dk)">Lihat Aksinya</span>
+      <h2>Cerita di Balik Cokelat</h2>
+    </div>
+  </div>
+
+  <div class="stories-wrap">
+    <button class="story-arrow prev" id="storyPrev" aria-label="Sebelumnya">‹</button>
+    <div class="stories-track" id="storiesTrack">
+
+      <div class="story-card" tabindex="0" role="button" data-type="video" data-src="assets/videos/12pcs_green_2.mp4">
+        <img class="story-gif" src="assets/videos/12pcs_green_2.gif" alt="Gift Box Hijau 12 Pcs preview" loading="lazy">
+        <div class="story-info">
+          <div><strong>Gift Box Hijau 12 Pcs</strong></div>
+        </div>
+    </div>
+
+      <div class="story-card" tabindex="0" role="button" data-type="video" data-src="assets/videos/5pcs_red_heart_shape_milk_1.mp4">
+        <img class="story-gif" src="assets/videos/5pcs_red_heart_shape_milk_1.gif" alt="Milk Heart Shape 5pcs preview" loading="lazy">
+        <div class="story-info">
+          <div><strong>Milk Heart Shape 5pcs Merah</strong></div>
+        </div>
+    </div>
+
+      <div class="story-card" tabindex="0" role="button" data-type="video" data-src="assets/videos/fruit_and_nuts.mp4">
+        <img class="story-gif" src="assets/videos/fruit_and_nuts.gif" alt="Fruit and Nuts Bar preview" loading="lazy">
+        <div class="story-info">
+          <div><strong>Fruit and Nuts Bar</strong></div>
+        </div>
+      </div>
+
+      <div class="story-card" tabindex="0" role="button" data-type="video" data-src="assets/videos/12pcs_pink_2.mp4">
+        <img class="story-gif" src="assets/videos/12pcs_pink_2.gif" alt="Gift Box Pink 12 Pcs preview" loading="lazy">
+        <div class="story-info">
+          <div><strong>Gift Box Pink 12 Pcs</strong></div>
+        </div>
+      </div>
+
+      <div class="story-card" tabindex="0" role="button" data-type="video" data-src="assets/videos/pistachio-bar.mp4">
+        <img class="story-gif" src="assets/videos/pistachio-bar.gif" alt="Pistachio Bar preview" loading="lazy">
+        <div class="story-info">
+          <div><strong>Pistachio 100g Milk Bar</strong></div>
+        </div>
+      </div>
+
+      <div class="story-card" tabindex="0" role="button" data-type="video" data-src="assets/videos/9_perline_cream_1.mp4">
+        <img class="story-gif" src="assets/videos/9_perline_cream_1.gif" alt="Gift Box Cream 9 Pcs preview" loading="lazy">
+        <div class="story-info">
+          <div><strong>Gift Box Cream 9 Pcs</strong></div>
+        </div>
+      </div>
+
+      <div class="story-card" tabindex="0" role="button" data-type="video" data-src="assets/videos/12pcs_pink_1.mp4">
+        <img class="story-gif" src="assets/videos/12pcs_pink_1.gif" alt="Gift Box Pink 12 Pcs preview" loading="lazy">
+        <div class="story-info">
+          <div><strong>Gift Box Pink 12 Pcs</strong></div>
+        </div>
+      </div>
+
+      <div class="story-card" tabindex="0" role="button" data-type="video" data-src="assets/videos/12pcs_green_1.mp4">
+        <img class="story-gif" src="assets/videos/12pcs_green_1.gif" alt="Gift Box Hijau 12 Pcs preview" loading="lazy">
+        <div class="story-info">
+          <div><strong>Gift Box Hijau 12 Pcs</strong></div>
+        </div>
+      </div>
+
+
+
+
+    </div>
+    <button class="story-arrow next" id="storyNext" aria-label="Berikutnya">›</button>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer id="footer">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+  <a href="#top" class="logo"><span class="dot"></span>Flow Chocolates</a>
+  <p>Cokelat premium buatan tangan, dikirim langsung dari Bekasi ke seluruh Indonesia.</p>
+  <div class="foot-address">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+    <p>Jl. Alamat Lengkap No. 123, Bekasi, Jawa Barat, Indonesia<br><span class="addr-note">*Toko online — tidak melayani kunjungan/pickup langsung</span></p>
+  </div>
+</div>
+      <div class="foot-col">
+        <h5>Cokelat</h5>
+        <ul>
+          <li><a href="#bar-pilihan">Cokelat Batang / Chocolate Bar</a></li>
+          <li><a href="#hadiah">Gift Box</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h5>Hadiah</h5>
+        <ul>
+          <li><a href="#">Chocolate Gift Box</a></li>
+          <li><a href="#">Corporate Gift</a></li>
+          <li><a href="#">Wedding Gift Set</a></li>
+          <li><a href="#">Aqiqah Gift</a></li>
+          <li><a href="#">Ramadhan &amp; Eid Gift</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h5>Belanja Di</h5>
+        <div class="shop-badges">
+          <a href="https://shopee.co.id/flowchocolates" target="_blank" rel="noopener noreferrer" class="shop-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg>Shopee</a>
+          <a href="https://www.tokopedia.com/flow-chocolate" target="_blank" rel="noopener noreferrer" class="shop-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg>Tokopedia</a>
+          <a href="https://vt.tiktok.com/ZSV25QkYy/?page=Mall" target="_blank" rel="noopener noreferrer" class="shop-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 3c.3 2.1 1.8 3.6 4 3.9v2.6c-1.5 0-2.9-.4-4-1.2v6.1a5.6 5.6 0 1 1-5.6-5.6c.3 0 .6 0 .9.1v2.7a2.9 2.9 0 1 0 2 2.8V3h2.7z"/></svg>TikTok Shop</a>
+        </div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <p>© 2026 PT Sidr Root Stream · Indonesia.</p>
+      <div class="foot-social">
+        <a href="https://www.instagram.com/flow.chocolates/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1"/></svg></a>
+        <a href="https://www.tiktok.com/@flow.chocolates" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 3c.3 2.1 1.8 3.6 4 3.9v2.6c-1.5 0-2.9-.4-4-1.2v6.1a5.6 5.6 0 1 1-5.6-5.6c.3 0 .6 0 .9.1v2.7a2.9 2.9 0 1 0 2 2.8V3h2.7z"/></svg></a>
+        <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21v-7.6h2.6l.4-3H13.5V8.4c0-.9.2-1.5 1.5-1.5h1.6V4.2C16.3 4.1 15.3 4 14.1 4c-2.4 0-4.1 1.5-4.1 4.1v2.3H7.4v3H10V21h3.5z"/></svg></a>
+        <a href="https://wa.me/6287862377765?text=Halo%20Flow%20Chocolates%2C%20saya%20mau%20tanya-tanya%20produknya" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" title="WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.5 15.2L2 22l4.9-1.5A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-2.9.9.9-2.8-.2-.3A8 8 0 1 1 12 20z"/><path d="M16.7 14.1c-.3-.1-1.6-.8-1.8-.9-.2-.1-.4-.1-.6.1-.2.2-.6.9-.8 1-.1.2-.3.2-.5.1a6.5 6.5 0 0 1-2-1.2 7.4 7.4 0 0 1-1.4-1.7c-.1-.2 0-.4.1-.5l.4-.4c.1-.1.2-.2.2-.4.1-.1.1-.3 0-.4-.1-.1-.6-1.4-.8-1.9-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.2.9 2.3c.1.2 1.6 2.5 4 3.4.5.2 1 .3 1.3.4.5.2 1 .1 1.4.1.4-.1 1.3-.5 1.5-1 .2-.5.2-.9.1-1z"/></svg></a>
+      </div>
+    </div>
+  </div> 
+
+</footer>
+
+<script>
+  let currentFlavorSelection = null;
+  function formatRupiah(n){ return "Rp " + n.toLocaleString("id-ID"); }
+  const FLAVORS = {
+    milk: [
+  {name:"Aprikot",id:"milk-aprikot-100g", cocoa:"MILK CHOCOLATE · 100GR", desc:"Cokelat susu lembut berpadu dengan potongan aprikot kering yang asam segar.", price:32500, img:"assets/bar_chocolates/milk_bar_aprikot.png"},
+  {name:"Hazelnut",id:"milk-hazelnut-100g", cocoa:"MILK CHOCOLATE · 100GR", desc:"Cokelat susu klasik dengan potongan hazelnut panggang yang gurih.", price:37000, img:"assets/bar_chocolates/milk_bar_hazelnut.png"},
+  {name:"Pistachio",id: "milk-pistachio-100g", cocoa:"MILK CHOCOLATE · 100GR", desc:"Cokelat susu lembut dengan taburan pistachio panggang di setiap gigitan.", price:44000, img:"assets/bar_chocolates/milk_bar_pistachio.png"},
+  {name:"Walnut",id: "milk-walnut-100g", cocoa:"MILK CHOCOLATE · 100GR", desc:"Perpaduan cokelat susu creamy dengan walnut panggang yang renyah.", price:33000, img:"assets/bar_chocolates/milk_bar_walnut.png"},
+  {name:"Cranberry 40gr",id: "milk-cranberry-40g", cocoa:"MILK CHOCOLATE · 40GR", desc:"Cokelat susu creamy dengan cranberry asam segar.", price:17500, img:"assets/bar_40gr/milk_40gr_cranberry.jpg", size:"40gr"},
+  {name:"Mangga 40gr",id: "milk-manggo-40g", cocoa:"MILK CHOCOLATE · 40GR", desc:"Cokelat susu dipadukan dengan rasa mangga manis segar.", price:17500, img:"assets/bar_40gr/milk_40gr_mangga.jpg", size:"40gr"},
+  {name:"Kismis Hitam 40gr",id: "milk-kismis-40g", cocoa:"MILK CHOCOLATE · 40GR", desc:"Cokelat susu lembut dengan kismis hitam manis di setiap gigitan.", price:17500, img:"assets/bar_40gr/milk_40gr_kismis_hitam.jpg", size:"40gr"},
+  {name:"Kacang & Buah Beri Mix 40gr",id: "milk-fruitandnuts-40g", cocoa:"MILK CHOCOLATE · 40GR", desc:"Cokelat susu dengan topping campuran kacang dan buah beri pilihan.", price:17500, img:"assets/bar_40gr/milk_40gr_kacang_beri_mix.jpg", size:"40gr"},
+    ],
+    dark: [
+  {name:"Original 56%", id: "dark-56-100g", cocoa:"DARK CHOCOLATE 56% · 100GR", desc:"Dark chocolate dengan keseimbangan rasa pahit dan manis yang pas untuk pemula.", price:80000, img:"assets/bar_chocolates/dark_bar_56.jpeg"},
+  {name:"Original 72%", id: "dark-72-100g", cocoa:"DARK CHOCOLATE 72% · 100GR", desc:"Rasa cokelat pekat dan intens untuk pencinta dark chocolate sejati.", price:48000, img:"assets/bar_chocolates/dark_bar_72.jpeg"},
+  {name:"Almond Hazelnut", id: "dark-56-almond-hazelnut-100g", cocoa:"DARK CHOCOLATE · 100GR", desc:"Perpaduan almond dan hazelnut panggang dalam balutan dark chocolate.", price:54000, img:"assets/bar_chocolates/dark_bar_almond_hazelnut.jpeg"},
+  {name:"Cashew", id: "dark-56-cashew-100g", cocoa:"DARK CHOCOLATE · 100GR", desc:"Dark chocolate dipadukan dengan cashew panggang yang gurih dan renyah.", price:52000, img:"assets/bar_chocolates/dark_bar_cashew.jpeg"},
+  {name:"Coffee", id: "dark-56-coffee-100g", cocoa:"DARK CHOCOLATE · 100GR", desc:"Dark chocolate dengan aroma kopi yang kuat, cocok untuk pecinta rasa pekat.", price:53000, img:"assets/bar_chocolates/dark_bar_coffee.jpeg"},
+  {name:"Pistachio Cranberry", id: "dark-56-pistachio-cranberry-100g", cocoa:"DARK CHOCOLATE  · 100GR", desc:"Dark chocolate dengan pistachio gurih dan cranberry asam segar.", price:60000, img:"assets/bar_chocolates/dark_bar_pistachio_cranberry.jpeg"},
+  {name:"Walnut", id: "dark-56-walnut-100g", cocoa:"DARK CHOCOLATE · 100GR", desc:"Dark chocolate pekat dipadukan dengan kenari panggang.", price:52000, img:"assets/bar_chocolates/dark_bar_walnut.jpeg"},
+    ],
+    white: [
+  {name:"Milk & White Mix",id: "white-milk-mix-100g", cocoa:"WHITE AND MILK CHOCOLATE", desc:"Perpaduan cokelat putih dan cokelat susu dalam satu batang yang creamy.", price:30000, img:"assets/bar_chocolates/milk_whte_bar.png"},
+  {name:"Cranberry White",id: "white-cranberry-100g", cocoa:"WHITE CHOCOLATE", desc:"Cokelat putih lembut dengan cranberry kering asam manis di setiap gigitan.", price:32000, img:"assets/bar_chocolates/white_bar_cranberry.png"},
+    ]
+  };
+
+  let currentTab = "milk";
+  const flavorGrid = document.getElementById("flavorGrid");
+
+  function renderFlavorCards(){
+    flavorGrid.innerHTML = "";
+    ["milk","dark","white"].forEach(tab=>{
+      FLAVORS[tab].forEach((f,i)=>{
+        const b = document.createElement("div");
+        b.className = "flavor-card" + (tab===currentTab ? " show" : "") + (tab===currentTab && i===0 ? " active" : "");
+        b.innerHTML = `<div class="thumb">${f.size ? `<span class="size-badge">${f.size}</span>` : ""}<img src="${f.img}" alt="${f.name}"></div><div class="label">${f.name}</div>`;
+        if(f.size) b.dataset.size = f.size;
+        b.onclick = ()=> pickFlavor(tab,i,b);
+        b.dataset.tab = tab;
+        flavorGrid.appendChild(b);
+      });
+    });
+  }
+
+  function pickFlavor(tab,i,card){
+    document.querySelectorAll(".flavor-card").forEach(c=>c.classList.remove("active"));
+    if(card) card.classList.add("active");
+    const f = FLAVORS[tab][i];
+    document.getElementById("prevCocoa").textContent = f.cocoa;
+    document.getElementById("prevName").textContent = f.name;
+    document.getElementById("prevDesc").textContent = f.desc;
+    document.getElementById("prevPrice").textContent = formatRupiah(f.price);
+    document.getElementById("prevImg").src = f.img;
+    document.getElementById("prevImg").alt = f.name;
+    const sizeNote = document.getElementById("prevSize");
+    if(f.size){
+      sizeNote.textContent = f.size + " · lebih kecil dari bar reguler (100g)";
+      sizeNote.style.display = "inline-block";
+    } else {
+      sizeNote.style.display = "none";
+}
+  currentFlavorSelection = f;
+  }
+
+  function selectBarTab(tab){
+    currentTab = tab;
+    document.getElementById("tabMilk").classList.toggle("active", tab==="milk");
+    document.getElementById("tabDark").classList.toggle("active", tab==="dark");
+    document.getElementById("tabWhite").classList.toggle("active", tab==="white");
+    document.querySelectorAll(".flavor-card").forEach(c=>{ c.classList.toggle("show", c.dataset.tab===tab); });
+    pickFlavor(tab, 0, flavorGrid.querySelector(`.flavor-card[data-tab="${tab}"]`));
+  }
+
+  renderFlavorCards();
+  pickFlavor("milk",0, flavorGrid.querySelector('.flavor-card[data-tab="milk"]'));
+  
+
+// ---------- scroll-driven bar break (real frame sequence) ----------
+  const stage = document.getElementById("scrollStage");
+  const frameEl = document.getElementById("barFrame");
+  const capEyebrow = document.getElementById("capEyebrow");
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const FRAME_COUNT = 76;
+  const framePath = i => `assets/choco_break_frames/ezgif-frame-${String(i).padStart(3,"0")}.jpg`;
+
+  let lastFrame = 1;
+  function updateBar(){
+    const rect = stage.getBoundingClientRect();
+    const total = rect.height - window.innerHeight;
+    let progress = total > 0 ? (-rect.top) / total : 0;
+    progress = Math.max(0, Math.min(1, progress));
+
+    const frameIndex = reduceMotion
+      ? (progress > 0.5 ? FRAME_COUNT : 1)
+      : Math.max(1, Math.min(FRAME_COUNT, Math.round(progress * (FRAME_COUNT-1)) + 1));
+
+    if(frameIndex !== lastFrame){
+      frameEl.src = framePath(frameIndex);
+      lastFrame = frameIndex;
+    }
+
+    capEyebrow.textContent = progress > 0.55 ? "Patah sempurna, renyah merata" : "Geser untuk mematahkan";
+  }
+
+  let ticking = false;
+  window.addEventListener("scroll", ()=>{
+    if(!ticking){ requestAnimationFrame(()=>{ updateBar(); ticking = false; }); ticking = true; }
+  }, {passive:true});
+  window.addEventListener("resize", updateBar);
+  updateBar();
+</script>
+<script src="script.js"></script>
+
+<div class="lightbox-overlay" id="lightboxOverlay">
+  <button type="button" class="lightbox-close" aria-label="Tutup">×</button>
+  <img id="lightboxImg" src="" alt="">
+</div>
+
+<a href="https://wa.me/6287862377765?text=Halo%20Flow%20Chocolates%2C%20saya%20mau%20tanya-tanya%20produknya" target="_blank" rel="noopener noreferrer" class="wa-float" aria-label="Chat via WhatsApp" title="Chat via WhatsApp">
+  <span class="wa-ring"></span>
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.5 15.2L2 22l4.9-1.5A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-2.9.9.9-2.8-.2-.3A8 8 0 1 1 12 20z"/><path d="M16.7 14.1c-.3-.1-1.6-.8-1.8-.9-.2-.1-.4-.1-.6.1-.2.2-.6.9-.8 1-.1.2-.3.2-.5.1a6.5 6.5 0 0 1-2-1.2 7.4 7.4 0 0 1-1.4-1.7c-.1-.2 0-.4.1-.5l.4-.4c.1-.1.2-.2.2-.4.1-.1.1-.3 0-.4-.1-.1-.6-1.4-.8-1.9-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.2.9 2.3c.1.2 1.6 2.5 4 3.4.5.2 1 .3 1.3.4.5.2 1 .1 1.4.1.4-.1 1.3-.5 1.5-1 .2-.5.2-.9.1-1z"/></svg>
+</a>
+
+<div class="story-viewer" id="storyViewer">
+  <button class="story-viewer-close" id="storyViewerClose" aria-label="Tutup">✕</button>
+  <div class="story-viewer-media" id="storyViewerMedia"></div>
+</div>
+
+<div class="cart-overlay" id="cartOverlay" onclick="if(event.target===this) toggleCart(false)">
+  <div class="cart-drawer">
+    <div class="cart-head">
+      <h3>Keranjang Kamu</h3>
+      <button class="cart-close" onclick="toggleCart(false)">✕</button>
+    </div>
+    <div class="cart-items" id="cartItems"></div>
+    <div class="cart-empty" id="cartEmpty">Keranjang masih kosong.</div>
+    <div class="cart-checkout" id="cartCheckoutSection">
+      <div class="cart-total">Total: <strong id="cartTotal">Rp 0</strong></div>
+
+      <input type="text" id="custName" placeholder="Nama lengkap">
+      <input type="text" id="custPhone" placeholder="No. WhatsApp">
+      <input type="email" id="custEmail" placeholder="Email (untuk struk pembayaran)">
+
+      <select id="custProvince">
+        <option value="">Pilih Provinsi</option>
+      </select>
+      <select id="custCity" disabled>
+        <option value="">Pilih Kota/Kabupaten</option>
+      </select>
+      <select id="custDistrict" disabled>
+        <option value="">Pilih Kecamatan</option>
+      </select>
+      <div id="shippingOptions"></div>
+    
+      <textarea id="custAddress" placeholder="Nama jalan, no. rumah, RT/RW, kode pos"></textarea>
+
+      <button class="btn btn-pink" style="width:100%" onclick="submitCheckout()">Bayar Sekarang</button>
+      <p class="cart-error" id="cartError"></p>
+    </div>
+  </div>
+</div>
+
+<div class="cart-overlay" id="authOverlay" onclick="if(event.target===this) toggleAuth(false)">
+  <div class="cart-drawer">
+    <div class="cart-head">
+      <h3 id="authTitle">Masuk</h3>
+      <button class="cart-close" onclick="toggleAuth(false)">✕</button>
+    </div>
+
+    <div class="cart-checkout" id="loginForm">
+      <input type="text" id="loginIdentifier" placeholder="No. WhatsApp atau Email">
+      <input type="password" id="loginPassword" placeholder="Password">
+      <button class="btn btn-pink" style="width:100%" onclick="submitLogin()">Masuk</button>
+      <p class="cart-error" id="loginError"></p>
+      <p style="font-size:.85rem;text-align:center;">Belum punya akun? <a href="#" onclick="showRegisterForm(); return false;" style="color:var(--pink-dk);font-weight:700;">Daftar</a></p>
+    </div>
+
+    <div class="cart-checkout" id="registerForm" style="display:none;">
+      <input type="text" id="regName" placeholder="Nama lengkap">
+      <input type="text" id="regPhone" placeholder="No. WhatsApp (opsional jika isi email)">
+      <input type="email" id="regEmail" placeholder="Email (opsional jika isi WhatsApp)">
+      <input type="password" id="regPassword" placeholder="Password (min. 6 karakter)">
+      <button class="btn btn-pink" style="width:100%" onclick="submitRegister()">Daftar</button>
+      <p class="cart-error" id="authError"></p>
+      <p style="font-size:.85rem;text-align:center;">Sudah punya akun? <a href="#" onclick="showLoginForm(); return false;" style="color:var(--pink-dk);font-weight:700;">Masuk</a></p>
+    </div>
+  </div>
+</div>
+
+<div class="cart-overlay" id="settingsOverlay" onclick="if(event.target===this) toggleSettings(false)">
+  <div class="cart-drawer">
+    <div class="cart-head">
+      <h3>Akun Saya</h3>
+      <button class="cart-close" onclick="toggleSettings(false)">✕</button>
+    </div>
+
+    <div class="cart-checkout">
+      <p id="settingsName" style="font-weight:800;"></p>
+
+      <label style="font-size:.8rem;font-weight:700;">No. WhatsApp</label>
+      <input type="text" id="settingsPhone" placeholder="No. WhatsApp">
+
+      <label style="font-size:.8rem;font-weight:700;">Email</label>
+      <input type="email" id="settingsEmail" placeholder="Email">
+
+      <button class="btn btn-pink" style="width:100%" onclick="submitSettings()">Simpan</button>
+      <p class="cart-error" id="settingsError"></p>
+
+      <h4 style="margin-top:12px;">Pesanan Saya</h4>
+      <div id="myOrders"></div>
+
+      <button class="btn" style="width:100%;background:#eee;" onclick="logout(); toggleSettings(false);">Keluar</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

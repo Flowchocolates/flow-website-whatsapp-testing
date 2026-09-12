@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Pembayaran - Flow Chocolates</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="Mid-client-aNNPxqG215kM6IQ-"></script>
+  <style>
+    body { font-family: sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; background: #fdf6e9; }
+    .box { text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <p id="status">Menyiapkan pembayaran...</p>
+  </div>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const orderId = params.get("order");
+  let token = params.get("token");
+  const statusEl = document.getElementById("status");
+  const API_BASE = "https://flow-chocolates-backend-production.up.railway.app";
+
+async function apiFetch(url, options = {}) {
+  return fetch(url, options);
+}
+
+  async function startPayment(){
+  if(!orderId){
+    statusEl.textContent = "Link pembayaran tidak valid.";
+    return;
+  }
+
+  const res = await apiFetch(API_BASE + "/api/orders/" + orderId);
+  const order = await res.json();
+  if(order.error){
+    statusEl.textContent = "Pesanan tidak ditemukan.";
+    return;
+  }
+
+  const tokenAgeHours = (Date.now() - new Date(order.snap_token_created_at)) / (1000 * 60 * 60);
+  let finalToken = order.snap_token;
+
+  if(tokenAgeHours > 23){
+    const renewRes = await apiFetch(API_BASE + "/api/orders/" + orderId + "/renew", { method: "POST" });
+    const renewData = await renewRes.json();
+    if(renewData.error){
+      statusEl.textContent = "Gagal memperbarui pembayaran: " + renewData.error;
+      return;
+    }
+    finalToken = renewData.token;
+  }
+
+  window.snap.pay(finalToken, {
+    onSuccess: () => { window.location.href = "index.html?paid=" + encodeURIComponent(orderId); },
+    onPending: () => { window.location.href = "index.html?pending=" + encodeURIComponent(orderId); },
+    onError: () => { statusEl.textContent = "Pembayaran gagal. Silakan coba lagi."; },
+    onClose: () => { statusEl.textContent = "Pembayaran dibatalkan."; }
+  });
+}
+
+startPayment();
+</script>
+</body>
+</html>
