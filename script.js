@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:3000";
+const API_BASE = "https://flow-chocolates-backend-production.up.railway.app";
 async function apiFetch(url, options = {}) {
   return fetch(url, options);
 }
